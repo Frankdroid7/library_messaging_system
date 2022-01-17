@@ -1,14 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:libary_messaging_system/locator.dart';
 import 'package:libary_messaging_system/router.gr.dart';
+import 'package:libary_messaging_system/screens/add_broadcast_screen/bloc/add_broadcast_bloc.dart';
+import 'package:libary_messaging_system/screens/add_broadcast_screen/bloc/add_broadcast_state.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_bloc.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
-import 'package:libary_messaging_system/screens/authentication/repository/auth_repository.dart';
 import 'package:libary_messaging_system/screens/home_screen/bloc/home_screen_bloc.dart';
 import 'package:libary_messaging_system/screens/home_screen/bloc/home_screen_state.dart';
 
 void main() async {
+  setup();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -27,6 +30,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               HomeScreenBloc(initialState: HomeScreenState.loading()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              AddBroadcastBloc(initialState: AddBroadCastState.loading()),
         ),
       ],
       child: MaterialApp.router(

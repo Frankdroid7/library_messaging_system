@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:libary_messaging_system/common/repository/user_repository.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_event.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
 import 'package:libary_messaging_system/screens/authentication/repository/auth_repository.dart';
+
+import '../../../locator.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required AuthState initialState}) : super(AuthState.unknown()) {
@@ -20,6 +23,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await AuthRepository.addUser(event.authModel.email);
         emit(AuthState.authenticated(event.authModel));
+
+        getIt<UserRepository>().email = event.authModel.email;
       } on FirebaseException catch (e) {
         emit(AuthState.error(e.code));
       } catch (e) {

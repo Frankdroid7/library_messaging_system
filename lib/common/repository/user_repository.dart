@@ -1,0 +1,3 @@
+class UserRepository {
+  String? email;
+}

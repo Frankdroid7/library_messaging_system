@@ -1,11 +1,11 @@
+enum AddBroadcastStatus { unknown, loading, done }
 
-enum AddBroadcastStatus {loading, done}
+class AddBroadCastState {
+  final AddBroadcastStatus status;
 
-class AddBroadCastState{
-  final AddBroadcastStatus addBroadcastStatus;
+  AddBroadCastState({required this.status});
 
-  AddBroadCastState({required this.addBroadcastStatus});
-
-  AddBroadCastState.done(): this(addBroadcastStatus: AddBroadcastStatus.done);
-  AddBroadCastState.loading(): this(addBroadcastStatus: AddBroadcastStatus.loading);
+  AddBroadCastState.done() : this(status: AddBroadcastStatus.done);
+  AddBroadCastState.unknown() : this(status: AddBroadcastStatus.unknown);
+  AddBroadCastState.loading() : this(status: AddBroadcastStatus.loading);
 }

@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:libary_messaging_system/router.gr.dart';
 import 'package:libary_messaging_system/common/widgets/action_button.dart';
 import 'package:libary_messaging_system/common/widgets/custom_text_field.dart';
+import 'package:libary_messaging_system/router.gr.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_bloc.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_event.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
 import 'package:libary_messaging_system/screens/authentication/models/auth_model.dart';
-import 'package:libary_messaging_system/screens/home_screen/repository/home_screen_repository.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -72,16 +71,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         )),
                 SizedBox(height: 10),
                 ActionButton(
-                    title: 'Login E-learning',
-                    onPressed: () => BlocProvider.of<AuthBloc>(context).add(
-                          LoginRequestEvent(
-                            authModel: AuthModel(
-                              passcode: 222,
-                              password: 'password',
-                              email: 'e-learning@funaablibrary.com',
-                            ),
-                          ),
-                        )),
+                  title: 'Login E-learning',
+                  onPressed: () => BlocProvider.of<AuthBloc>(context).add(
+                    LoginRequestEvent(
+                      authModel: AuthModel(
+                        passcode: 222,
+                        password: 'password',
+                        email: 'e-learning@funaablibrary.com',
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

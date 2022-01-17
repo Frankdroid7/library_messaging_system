@@ -5,15 +5,17 @@ import 'package:libary_messaging_system/screens/add_broadcast_screen/repository/
 
 class AddBroadcastBloc extends Bloc<AddBroadcastEvent, AddBroadCastState> {
   AddBroadcastBloc({required AddBroadCastState initialState})
-      : super(initialState) {
+      : super(AddBroadCastState.unknown()) {
     on<AddBroadcastEvent>(_processAddBroadcastEvent);
   }
 }
 
 _processAddBroadcastEvent(
-    AddBroadcastEvent event, Emitter<AddBroadCastState> state) async {
-  await AddBroadcastRepository.addBroadcast(
+    AddBroadcastEvent event, Emitter<AddBroadCastState> emit) async {
+  emit(AddBroadCastState.loading());
+  await AddBroadcastRepository.sendBroadcast(
     documentId: event.documentId,
     broadcastMessage: event.broadcastMessage,
   );
+  emit(AddBroadCastState.done());
 }

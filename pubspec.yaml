@@ -14,8 +14,9 @@ dependencies:
     sdk: flutter
 
   bloc: ^8.0.1
+  get_it: ^7.2.0
   equatable: ^2.0.3
-  auto_route: 2.2.0
+  auto_route: 3.2.1
   flutter_bloc: ^8.0.0
   firebase_core: ^1.10.6
   cloud_firestore: ^3.1.5
