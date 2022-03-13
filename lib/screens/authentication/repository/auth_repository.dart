@@ -1,33 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:libary_messaging_system/common/repository/firestore_repository.dart';
-import 'package:libary_messaging_system/screens/authentication/models/auth_model.dart';
+import 'package:libary_messaging_system/screens/authentication/models/login_model.dart';
 
 class AuthRepository {
-  static Future addUser(String email) async {
-    await FirestoreRepository.usersCollection
-        .doc(email)
-        .get()
-        .then((docSnapshot) {
-      if (!docSnapshot.exists) {
-        FirestoreRepository.usersCollection.doc(email).set({'okay': 2});
-      }
-    });
+  static Future addUser({required String userId, required String email}) async {
+    await FirebaseRepository.usersCollection
+        .doc(userId)
+        .set({'user_id': userId, 'email': email});
   }
 
-  static List<AuthModel> authModelList = [
-    AuthModel(
-      passcode: 111,
-      email: 'receptionist@funaablibrary.com',
-      password: 'password',
-    ),
-    AuthModel(
-      passcode: 222,
-      email: 'e-learning@funaablibrary.com',
-      password: 'password',
-    ),
-    AuthModel(
-      passcode: 333,
-      email: 'technical@funaablibrary.com',
-      password: 'password',
-    ),
-  ];
+  static Future<User?> login({required LoginModel loginModel}) async {
+    UserCredential userCredential =
+        await FirebaseRepository.firebaseAuth.signInWithEmailAndPassword(
+      email: loginModel.email,
+      password: loginModel.password,
+    );
+    return userCredential.user;
+  }
+
+  static Future logOut() async {
+    await FirebaseRepository.firebaseAuth.signOut();
+  }
 }

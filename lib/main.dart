@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libary_messaging_system/locator.dart';
 import 'package:libary_messaging_system/router.gr.dart';
-import 'package:libary_messaging_system/screens/add_broadcast_screen/bloc/add_broadcast_bloc.dart';
-import 'package:libary_messaging_system/screens/add_broadcast_screen/bloc/add_broadcast_state.dart';
+import 'package:libary_messaging_system/screens/add_broadcast/bloc/add_broadcast_bloc.dart';
+import 'package:libary_messaging_system/screens/add_broadcast/bloc/add_broadcast_state.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_bloc.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
+import 'package:libary_messaging_system/screens/general_broadcast/bloc/general_broadcast_bloc.dart';
 import 'package:libary_messaging_system/screens/home_screen/bloc/home_screen_bloc.dart';
 import 'package:libary_messaging_system/screens/home_screen/bloc/home_screen_state.dart';
 
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               AddBroadcastBloc(initialState: AddBroadCastState.loading()),
+        ),
+        BlocProvider(
+          create: (context) => GeneralBroadcastBloc(),
         ),
       ],
       child: MaterialApp.router(

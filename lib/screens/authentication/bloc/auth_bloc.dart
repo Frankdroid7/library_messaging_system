@@ -1,9 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:libary_messaging_system/common/repository/firestore_repository.dart';
 import 'package:libary_messaging_system/common/repository/user_repository.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_event.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
+import 'package:libary_messaging_system/screens/authentication/models/user_model.dart';
 import 'package:libary_messaging_system/screens/authentication/repository/auth_repository.dart';
+import 'package:libary_messaging_system/utils/utils.dart';
 
 import '../../../locator.dart';
 
@@ -17,26 +21,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LoginRequestEvent event, Emitter<AuthState> emit) async {
     emit(AuthState.loading());
 
-    if (AuthRepository.authModelList
-        .toString()
-        .contains(event.authModel.toString())) {
-      try {
-        await AuthRepository.addUser(event.authModel.email);
-        emit(AuthState.authenticated(event.authModel));
+    try {
+      User? firebaseUser =
+          await AuthRepository.login(loginModel: event.loginModel);
+      await AuthRepository.addUser(
+          userId: firebaseUser!.uid, email: firebaseUser.email!);
+      emit(AuthState.authenticated(firebaseUser));
 
-        getIt<UserRepository>().email = event.authModel.email;
-      } on FirebaseException catch (e) {
-        emit(AuthState.error(e.code));
-      } catch (e) {
-        emit(AuthState.error(e.toString()));
+      getIt<UserRepository>().setUserModel = UserModel(
+        userId: firebaseUser.uid,
+        email: firebaseUser.email,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        emit(AuthState.error('No user found for that email.'));
+      } else if (e.code == 'wrong-password') {
+        emit(AuthState.error('Wrong password provided for that user.'));
       }
-    } else {
-      emit(AuthState.error('Wrong Credentials'));
+    } catch (e) {
+      print('FIREBASE LOGIN ERROR: $e');
     }
   }
+  //
+  // void _processLoginRequest(
+  //     LoginRequestEvent event, Emitter<AuthState> emit) async {
+  //   emit(AuthState.loading());
+  //
+  //   if (AuthRepository.authModelList
+  //       .toString()
+  //       .contains(event.loginModel.toString())) {
+  //     try {
+  //       // await AuthRepository.addUser(event.authModel.email);
+  //       emit(AuthState.authenticated(event.loginModel));
+  //
+  //       getIt<UserRepository>().email = event.loginModel.email;
+  //     } on FirebaseException catch (e) {
+  //       emit(AuthState.error(e.code));
+  //     } catch (e) {
+  //       emit(AuthState.error(e.toString()));
+  //     }
+  //   } else {
+  //     emit(AuthState.error('Wrong Credentials'));
+  //   }
+  // }
 
   void _processLogOutRequest(
-      LogOutRequestEvent event, Emitter<AuthState> emit) {
+      LogOutRequestEvent event, Emitter<AuthState> emit) async {
+    await AuthRepository.logOut();
     emit(AuthState.unauthenticated());
   }
 }

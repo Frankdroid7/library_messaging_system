@@ -7,7 +7,8 @@ import 'package:libary_messaging_system/router.gr.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_bloc.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_event.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
-import 'package:libary_messaging_system/screens/authentication/models/auth_model.dart';
+import 'package:libary_messaging_system/screens/authentication/models/login_model.dart';
+import 'package:libary_messaging_system/utils/utils.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) => _processListener(state),
       child: Scaffold(
@@ -60,11 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 20),
                 ActionButton(
                     title: 'Login Receptionist',
-                    onPressed: () => BlocProvider.of<AuthBloc>(context).add(
+                    onPressed: () => authBloc.add(
                           LoginRequestEvent(
-                            authModel: AuthModel(
-                              passcode: 111,
-                              password: 'password',
+                            loginModel: LoginModel(
+                              password: 'passcode',
                               email: 'receptionist@funaablibrary.com',
                             ),
                           ),
@@ -72,11 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 10),
                 ActionButton(
                   title: 'Login E-learning',
-                  onPressed: () => BlocProvider.of<AuthBloc>(context).add(
+                  onPressed: () => authBloc.add(
                     LoginRequestEvent(
-                      authModel: AuthModel(
-                        passcode: 222,
-                        password: 'password',
+                      loginModel: LoginModel(
+                        password: 'passcode',
                         email: 'e-learning@funaablibrary.com',
                       ),
                     ),
@@ -98,9 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
       case AuthStatus.unauthenticated:
         break;
       case AuthStatus.error:
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(state.error!),
-        ));
+        showSnackbar(context: context, content: state.error!);
         break;
       default:
         break;
