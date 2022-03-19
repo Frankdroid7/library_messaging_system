@@ -12,8 +12,8 @@ part 'general_broadcast_state.dart';
 
 class GeneralBroadcastBloc
     extends Bloc<GeneralBroadcastEvent, GeneralBroadcastState> {
-  GeneralBroadcastBloc()
-      : super(GeneralBroadcastState(GeneralBroadcastStatus.loading)) {
+  GeneralBroadcastBloc({required GeneralBroadcastState initialState})
+      : super(GeneralBroadcastState.loading()) {
     on<GetBroadcastEvent>(_processGeneralBroadcastEvent);
   }
 }

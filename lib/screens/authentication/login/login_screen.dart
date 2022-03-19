@@ -9,6 +9,7 @@ import 'package:libary_messaging_system/screens/authentication/bloc/auth_event.d
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
 import 'package:libary_messaging_system/screens/authentication/models/login_model.dart';
 import 'package:libary_messaging_system/utils/utils.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,76 +17,85 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController pswdCtrl = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) => _processListener(state),
-      child: Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) => Text(state.status.toString()),
-                ),
-                BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-                  switch (state.status) {
-                    case AuthStatus.loading:
-                      return Center(child: CircularProgressIndicator());
-                    case AuthStatus.error:
-                      return Text(state.error!);
-                    default:
-                      return SizedBox.shrink();
-                  }
-                }),
-                CustomTextField(
-                  labelText: 'Email',
-                  validator: (value) {},
-                  errorText: 'Enter a valid email address',
-                ),
-                SizedBox(height: 10),
-                CustomTextField(
-                  labelText: 'Password',
-                  validator: (value) {},
-                  errorText: 'Enter a valid password',
-                ),
-                SizedBox(height: 10),
-                CustomTextField(
-                  labelText: 'Code',
-                  validator: (value) {},
-                  errorText: 'Enter a valid department code',
-                ),
-                SizedBox(height: 20),
-                ActionButton(
-                    title: 'Login Receptionist',
-                    onPressed: () => authBloc.add(
-                          LoginRequestEvent(
-                            loginModel: LoginModel(
-                              password: 'passcode',
-                              email: 'receptionist@funaablibrary.com',
-                            ),
-                          ),
-                        )),
-                SizedBox(height: 10),
-                ActionButton(
-                  title: 'Login E-learning',
-                  onPressed: () => authBloc.add(
-                    LoginRequestEvent(
-                      loginModel: LoginModel(
-                        password: 'passcode',
-                        email: 'e-learning@funaablibrary.com',
-                      ),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state.status == AuthStatus.loading,
+            child: Scaffold(
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Enter your department\'s login details',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(height: 10),
+                        CustomTextField(
+                          labelText: 'Email',
+                          controller: emailCtrl,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Enter your email address';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        CustomTextField(
+                          maxLines: 1,
+                          controller: pswdCtrl,
+                          labelText: 'Password',
+                          isPasswordField: true,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Enter your valid password';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        ActionButton(
+                          title: 'Login',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              FocusScope.of(context).unfocus();
+                              authBloc.add(
+                                LoginRequestEvent(
+                                  loginModel: LoginModel(
+                                    password: pswdCtrl.text,
+                                    email: emailCtrl.text,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(height: 10),
+                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

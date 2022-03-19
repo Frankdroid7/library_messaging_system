@@ -40,7 +40,7 @@ class ActionButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(30));
         }),
         backgroundColor: MaterialStateColor.resolveWith((states) {
-          return filled ? Color(0xffff0000) : Colors.white;
+          return filled ? Colors.blue : Colors.white;
         }),
       ),
       onPressed: onPressed,

@@ -9,17 +9,11 @@ class HomeScreenRepository {
     await FirebaseRepository.usersCollection.get().then((value) {
       value.docs.forEach((element) {
         if (element['user_id'] != getIt<UserRepository>().userModel!.userId) {
-          print(
-              'CURRENT USER ID :::: ${getIt<UserRepository>().userModel!.userId}');
-          print('USER ID ::: ${element['user_id']}');
           departModel.add(DepartmentModel(
               departmentId: element['user_id'],
               departmentEmail: element['email']));
         }
       });
-    });
-    departModel.forEach((element) {
-      print('DEPARTMENT EMAIL :::: ${element.departmentEmail}');
     });
     return departModel;
   }

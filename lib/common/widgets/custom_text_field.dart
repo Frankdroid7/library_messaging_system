@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final int? maxLines;
   final String? hintText;
-  final String errorText;
   final String? labelText;
   final EdgeInsets margin;
   final bool isPasswordField;
   final IconData? prefixIconData;
-  final Function(String) validator;
   final Function(String)? onChanged;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     Key? key,
     this.hintText,
     this.maxLines,
+    this.validator,
     this.onChanged,
     this.labelText,
     this.controller,
     this.prefixIconData,
-    required this.validator,
-    required this.errorText,
     this.isPasswordField = false,
     this.margin = const EdgeInsets.symmetric(
       vertical: 8.0,
@@ -70,7 +68,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           floatingLabelBehavior: FloatingLabelBehavior.auto,
         ),
         validator: (value) {
-          return widget.validator(value!) ? null : widget.errorText;
+          return widget.validator != null ? widget.validator!(value) : null;
         },
       ),
     );

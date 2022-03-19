@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libary_messaging_system/common/models/department_model.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_event.dart';
 import 'package:libary_messaging_system/screens/authentication/bloc/auth_state.dart';
 import 'package:libary_messaging_system/screens/home_screen/bloc/home_screen_bloc.dart';
@@ -61,39 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ListView.builder(
                     itemCount: state.departments!.length,
                     itemBuilder: (context, index) {
-                      return Card(
-                        margin: EdgeInsets.all(10),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(state.departments![index].departmentEmail!),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text('CHAT')),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        context.pushRoute(
-                                            GeneralBroadcastScreen(
-                                                departmentId: state
-                                                    .departments![index]
-                                                    .departmentId!));
-                                      },
-                                      child: Text('GENERAL BROADCAST')),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      DepartmentModel departmentModel =
+                          state.departments![index];
+                      return homeScreenCard(departmentModel);
                     },
                   );
-                  break;
+
                 default:
                   return Center(child: CircularProgressIndicator());
               }
@@ -108,5 +82,52 @@ class _HomeScreenState extends State<HomeScreen> {
     if (state.status == AuthStatus.unauthenticated) {
       context.router.replaceAll([LoginScreen()]);
     }
+  }
+
+  String getDepartmentName(String departmentName) {
+    return departmentName.split('@')[0];
+  }
+
+  Widget homeScreenCard(DepartmentModel departmentModel) {
+    return Card(
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              '${departmentModel.departmentEmail!.split('@')[0].toUpperCase()} Department',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    context.pushRoute(
+                      ChatScreen(
+                        otherDepartmentId: departmentModel.departmentId!,
+                        otherDepartmentName: getDepartmentName(
+                          departmentModel.departmentEmail!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('CHAT'),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      context.pushRoute(GeneralBroadcastScreen(
+                          departmentId: departmentModel.departmentId!));
+                    },
+                    child: Text('GENERAL BROADCAST')),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

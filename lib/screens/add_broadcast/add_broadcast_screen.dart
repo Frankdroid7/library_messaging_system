@@ -34,11 +34,17 @@ class _AddBroadcastScreenState extends State<AddBroadcastScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CustomTextField(
-                      maxLines: 5,
-                      controller: broadcastMsgCtrl,
-                      validator: (value) => value.isNotEmpty,
-                      hintText: 'Add Broadcast message',
-                      errorText: 'Please add a broadcast message'),
+                    maxLines: 5,
+                    controller: broadcastMsgCtrl,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Enter a broadcast message';
+                      } else {
+                        return null;
+                      }
+                    },
+                    hintText: 'Add Broadcast message',
+                  ),
                 ),
                 SizedBox(height: 20),
                 BlocBuilder<AddBroadcastBloc, AddBroadCastState>(

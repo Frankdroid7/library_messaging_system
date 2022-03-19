@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      AutoRouter.of(context).popAndPush(LoginScreen());
+      AutoRouter.of(context).replaceAll([LoginScreen()]);
     });
   }
 
@@ -20,7 +20,25 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.orange,
+        color: Colors.blue,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset('assets/images/library.jpeg'),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Library Services',
+              style: TextStyle(
+                fontSize: 28,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

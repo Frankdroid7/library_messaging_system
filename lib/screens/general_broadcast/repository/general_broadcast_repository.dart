@@ -10,9 +10,9 @@ class GeneralBroadcastRepository {
     await FirebaseRepository.usersCollection
         .doc(departmentId)
         .collection(FirestoreConstants.BROADCAST_MESSAGE)
+        .orderBy('timeStamp')
         .get()
         .then((value) {
-      print('VALUE ::::: $value');
       value.docs.forEach((element) {
         generalBcModel.add(
           GeneralBroadcastModel(
@@ -24,17 +24,4 @@ class GeneralBroadcastRepository {
     });
     return generalBcModel;
   }
-  // static Future sendBroadcast(
-  //     {required String userId, required String broadcastMessage}) async {
-  //   return await FirebaseRepository.usersCollection
-  //       .doc(userId)
-  //       .collection('broadcastMessage')
-  //       .doc()
-  //       .set(
-  //     {
-  //       'message': broadcastMessage,
-  //       'timeStamp': FieldValue.serverTimestamp(),
-  //     },
-  //   );
-  // }
 }

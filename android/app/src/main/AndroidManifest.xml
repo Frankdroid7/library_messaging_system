@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.frankdroid7.libary_messaging_system">
    <application
-        android:label="libary_messaging_system"
+        android:label="Library Messaging System"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

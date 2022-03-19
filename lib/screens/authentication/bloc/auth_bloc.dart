@@ -36,34 +36,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (e.code == 'user-not-found') {
         emit(AuthState.error('No user found for that email.'));
       } else if (e.code == 'wrong-password') {
-        emit(AuthState.error('Wrong password provided for that user.'));
+        emit(AuthState.error('Wrong password'));
+      } else if (e.code == 'invalid-email') {
+        emit(AuthState.error('Invalid email address'));
       }
     } catch (e) {
       print('FIREBASE LOGIN ERROR: $e');
+      emit(AuthState.error(e.toString()));
     }
   }
-  //
-  // void _processLoginRequest(
-  //     LoginRequestEvent event, Emitter<AuthState> emit) async {
-  //   emit(AuthState.loading());
-  //
-  //   if (AuthRepository.authModelList
-  //       .toString()
-  //       .contains(event.loginModel.toString())) {
-  //     try {
-  //       // await AuthRepository.addUser(event.authModel.email);
-  //       emit(AuthState.authenticated(event.loginModel));
-  //
-  //       getIt<UserRepository>().email = event.loginModel.email;
-  //     } on FirebaseException catch (e) {
-  //       emit(AuthState.error(e.code));
-  //     } catch (e) {
-  //       emit(AuthState.error(e.toString()));
-  //     }
-  //   } else {
-  //     emit(AuthState.error('Wrong Credentials'));
-  //   }
-  // }
 
   void _processLogOutRequest(
       LogOutRequestEvent event, Emitter<AuthState> emit) async {

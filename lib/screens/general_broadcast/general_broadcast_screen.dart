@@ -52,36 +52,39 @@ class _GeneralBroadcastScreenState extends State<GeneralBroadcastScreen> {
                 return ListView.builder(
                     itemCount: state.generalBroadcastModelList!.length,
                     itemBuilder: (context, index) {
-                      GeneralBroadcastModel generalBroadcast =
-                          state.generalBroadcastModelList![index];
-                      return Card(
-                        margin: EdgeInsets.all(12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                generalBroadcast.message!,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                DateFormat.yMMMMd()
-                                    .format(generalBroadcast.dateTime!),
-                                textAlign: TextAlign.end,
-                              )
-                            ],
-                          ),
-                        ),
-                      );
+                      GeneralBroadcastModel generalBroadcast = state
+                          .generalBroadcastModelList!.reversed
+                          .toList()[index];
+                      return generalBroadcastCard(generalBroadcast);
                     });
               }
           }
         },
+      ),
+    );
+  }
+
+  Widget generalBroadcastCard(GeneralBroadcastModel generalBroadcast) {
+    return Card(
+      margin: EdgeInsets.all(12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              generalBroadcast.message!,
+              textAlign: TextAlign.start,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              DateFormat.yMMMMd().format(generalBroadcast.dateTime!),
+              textAlign: TextAlign.end,
+            )
+          ],
+        ),
       ),
     );
   }

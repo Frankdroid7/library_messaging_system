@@ -6,5 +6,7 @@ class FirebaseRepository {
   static FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   static CollectionReference usersCollection =
       firebaseFirestore.collection(FirestoreConstants.USERS);
+  static CollectionReference messagesCollection =
+      firebaseFirestore.collection(FirestoreConstants.MESSAGES);
   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 }
